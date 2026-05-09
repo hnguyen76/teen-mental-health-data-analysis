@@ -13,30 +13,27 @@ This repository contains a complete beginner-friendly data workflow:
 ## Project Status
 
 Status: Active learning project  
-Primary dataset: `data/Teen_Mental_Health_Dataset.csv`  
-Cleaned dataset: `data/Teen_Mental_Health_cleaned.csv`  
-Main cleaning notebook: `EDA_teen_cleaning_data.ipynb`  
+Primary dataset: `Teen_Mental_Health_Dataset.csv`  
+Cleaned dataset: `Teen_Mental_Health_Cleaned.csv`  
+Cleaning script: `cleaning.py`  
 Main visualization notebook: `teen_visiualize.ipynb`
+Dashboard app: `dashboard.py`
 
 ## Repository Structure
 
 ```text
 .
-|-- data/
-|   |-- Teen_Mental_Health_Dataset.csv
-|   |-- Teen_Mental_Health_cleaned.csv
-|   |-- employee.csv
-|   |-- employee_cleaned.csv
-|   `-- employee_cleanedbyme.csv
+|-- Teen_Mental_Health_Dataset.csv
+|-- Teen_Mental_Health_Cleaned.csv
 |-- reports/
 |   |-- DATA_CLEANING_REPORT.md
 |   |-- DATA_DICTIONARY.md
 |   |-- EDA_REPORT.md
 |   |-- SOW.md
 |   `-- VISUALIZATION_REPORT.md
-|-- EDA_teen_cleaning_data.ipynb
+|-- cleaning.py
+|-- dashboard.py
 |-- teen_visiualize.ipynb
-|-- EDA_with_CSV.ipynb
 |-- requirements.txt
 `-- README.md
 ```
@@ -118,10 +115,24 @@ Start Jupyter:
 jupyter notebook
 ```
 
-Open the notebooks in this order:
+Open the visualization notebook:
 
-1. `EDA_teen_cleaning_data.ipynb`
-2. `teen_visiualize.ipynb`
+1. `teen_visiualize.ipynb`
+
+## Dashboard
+
+Run the Streamlit dashboard:
+
+```powershell
+streamlit run dashboard.py
+```
+
+The dashboard includes:
+
+- Sidebar filters for age, gender, platform, social interaction level, and depression label.
+- KPI cards for record count, label 1 rate, average sleep, average social media use, and sleep below 8 hours.
+- Overview, lifestyle signal, label comparison, and data table tabs.
+- A filtered CSV download button.
 
 ## Common Commands
 
@@ -130,7 +141,7 @@ Load the cleaned dataset:
 ```python
 import pandas as pd
 
-df = pd.read_csv("data/Teen_Mental_Health_cleaned.csv")
+df = pd.read_csv("Teen_Mental_Health_Cleaned.csv")
 df.head()
 ```
 
@@ -149,7 +160,7 @@ df.duplicated().sum()
 Export a cleaned CSV:
 
 ```python
-df.to_csv("data/Teen_Mental_Health_cleaned.csv", index=False)
+df.to_csv("Teen_Mental_Health_Cleaned.csv", index=False)
 ```
 
 ## Important Notes
