@@ -16,8 +16,9 @@ Status: Active learning project
 Primary dataset: `Teen_Mental_Health_Dataset.csv`  
 Cleaned dataset: `Teen_Mental_Health_Cleaned.csv`  
 Cleaning script: `cleaning.py`  
-Main visualization notebook: `teen_visiualize.ipynb`
-Dashboard app: `dashboard.py`
+Main visualization notebook: `teen_visiualize.ipynb`  
+Dashboard app: `dashboard.py`  
+GitHub-viewable dashboard: [reports/DASHBOARD.md](reports/DASHBOARD.md)
 
 ## Repository Structure
 
@@ -28,11 +29,14 @@ Dashboard app: `dashboard.py`
 |-- reports/
 |   |-- DATA_CLEANING_REPORT.md
 |   |-- DATA_DICTIONARY.md
+|   |-- DASHBOARD.md
 |   |-- EDA_REPORT.md
+|   |-- figures/
 |   |-- SOW.md
 |   `-- VISUALIZATION_REPORT.md
 |-- cleaning.py
 |-- dashboard.py
+|-- generate_static_dashboard.py
 |-- teen_visiualize.ipynb
 |-- requirements.txt
 `-- README.md
@@ -86,10 +90,19 @@ See [reports/DATA_DICTIONARY.md](reports/DATA_DICTIONARY.md) for the full data d
 
 Detailed interpretation is available in [reports/EDA_REPORT.md](reports/EDA_REPORT.md).
 
+## GitHub Dashboard Preview
+
+Open the full static dashboard here:
+
+[View Dashboard On GitHub](reports/DASHBOARD.md)
+
+![Dashboard preview](reports/figures/depression_label_count.png)
+
 ## Reports
 
 - [Statement of Work](reports/SOW.md)
 - [Data Dictionary](reports/DATA_DICTIONARY.md)
+- [GitHub Dashboard](reports/DASHBOARD.md)
 - [Data Cleaning Report](reports/DATA_CLEANING_REPORT.md)
 - [EDA Report](reports/EDA_REPORT.md)
 - [Visualization Report](reports/VISUALIZATION_REPORT.md)
@@ -121,10 +134,20 @@ Open the visualization notebook:
 
 ## Dashboard
 
+View the static dashboard directly on GitHub:
+
+- [GitHub-viewable dashboard](reports/DASHBOARD.md)
+
 Run the Streamlit dashboard:
 
 ```powershell
 streamlit run dashboard.py
+```
+
+Regenerate the GitHub dashboard charts:
+
+```powershell
+python generate_static_dashboard.py
 ```
 
 The dashboard includes:
