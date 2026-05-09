@@ -98,7 +98,7 @@ Open the full static dashboard here:
 
 [View Dashboard On GitHub](reports/DASHBOARD.md)
 
-![Dashboard preview](reports/figures/depression_label_count.png)
+![Dashboard preview](reports/figures/dashboard_summary.png)
 
 ## Reports
 
