@@ -50,6 +50,13 @@ The goal is to identify behavioral trends and visualize potential relationships 
 - Higher social media usage showed a relationship with increased anxiety and stress levels.
 - Teens with lower sleep hours tended to show higher depression indicators.
 - Stress and anxiety levels demonstrated a positive correlation.
+- 
+## Important Notes
+
+- This project is for data analysis and learning purposes.
+- The `depression_label` column is treated as a dataset label, not a clinical diagnosis.
+- Correlation and group averages should be interpreted carefully.
+- Findings should not be used to make medical, educational, or policy decisions without additional validation.
 
 ---
 
