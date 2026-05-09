@@ -8,6 +8,197 @@ import seaborn as sns
 
 
 APP_TITLE = "Teen Mental Health Dashboard"
+AUTHOR_LINE = "Created by Hieu Nguyen"
+APP_SUBTITLE = (
+    "Exploratory view of teen social media habits, sleep, school performance, "
+    "and mental-health-related indicators."
+)
+
+CARD_COLORS = ["#2563EB", "#0F766E", "#F97316", "#7C3AED", "#16A34A"]
+ACCENT_RED = "#DC2626"
+INK = "#172033"
+MUTED = "#64748B"
+GRID = "#E7ECF4"
+PANEL_BG = "#FFFFFF"
+
+DASHBOARD_CSS = """
+<style>
+    :root {
+        --ink: #172033;
+        --muted: #64748B;
+        --line: #E2E8F0;
+        --panel: #FFFFFF;
+        --page: #F6F8FB;
+        --blue: #2563EB;
+        --teal: #0F766E;
+        --orange: #F97316;
+    }
+
+    .stApp {
+        background: var(--page);
+        color: var(--ink);
+    }
+
+    .block-container {
+        padding-top: 1.2rem;
+        padding-bottom: 2.5rem;
+        max-width: 1280px;
+    }
+
+    [data-testid="stSidebar"] {
+        background: var(--panel);
+        border-right: 1px solid var(--line);
+    }
+
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {
+        color: var(--ink);
+    }
+
+    .creator-bar {
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+    }
+
+    .dashboard-hero {
+        background: linear-gradient(135deg, #172033 0%, #245C6F 58%, #F97316 140%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 8px;
+        color: #FFFFFF;
+        padding: 1.4rem 1.5rem;
+        margin-bottom: 1.1rem;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+
+    .dashboard-hero h1 {
+        font-size: clamp(1.7rem, 3vw, 2.45rem);
+        line-height: 1.08;
+        margin: 0 0 0.55rem 0;
+        letter-spacing: 0;
+    }
+
+    .dashboard-hero p {
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 1rem;
+        max-width: 780px;
+        margin: 0 0 1rem 0;
+    }
+
+    .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+    }
+
+    .hero-pill {
+        background: rgba(255, 255, 255, 0.13);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        color: #FFFFFF;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 0.36rem 0.7rem;
+    }
+
+    .section-title {
+        color: var(--ink);
+        font-size: 1.05rem;
+        font-weight: 800;
+        margin: 1.1rem 0 0.5rem 0;
+    }
+
+    .stat-card,
+    .insight-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+        min-height: 116px;
+        padding: 0.95rem 1rem;
+    }
+
+    .stat-card {
+        border-top: 4px solid var(--blue);
+    }
+
+    .stat-label {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0;
+        margin-bottom: 0.45rem;
+        text-transform: uppercase;
+    }
+
+    .stat-value {
+        color: var(--ink);
+        font-size: 1.7rem;
+        font-weight: 850;
+        line-height: 1.05;
+        margin-bottom: 0.45rem;
+        overflow-wrap: anywhere;
+    }
+
+    .stat-note,
+    .insight-note {
+        color: var(--muted);
+        font-size: 0.82rem;
+        line-height: 1.35;
+    }
+
+    .insight-card {
+        min-height: 100px;
+        margin-bottom: 0.65rem;
+    }
+
+    .insight-label {
+        color: var(--ink);
+        font-size: 0.92rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+    }
+
+    .risk-note {
+        background: #FFF7ED;
+        border: 1px solid #FED7AA;
+        border-radius: 8px;
+        color: #7C2D12;
+        font-size: 0.9rem;
+        line-height: 1.45;
+        margin: 0.8rem 0 1rem 0;
+        padding: 0.85rem 1rem;
+    }
+
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0.35rem;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        background: #FFFFFF;
+        border: 1px solid var(--line);
+        border-radius: 8px 8px 0 0;
+        color: var(--muted);
+        font-weight: 700;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .stTabs [aria-selected="true"] {
+        color: var(--ink);
+        border-bottom-color: #FFFFFF;
+    }
+
+    div[data-testid="stDataFrame"] {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+</style>
+"""
 
 DATA_CANDIDATES = (
     Path("Teen_Mental_Health_Cleaned.csv"),
@@ -109,8 +300,57 @@ def label_title(value: object) -> str:
     return str(value).replace("_", " ").title()
 
 
+def chart_palette(count: int) -> list[str]:
+    return [CARD_COLORS[index % len(CARD_COLORS)] for index in range(count)]
+
+
+def make_figure(figsize: tuple[float, float]):
+    fig, ax = plt.subplots(figsize=figsize)
+    fig.patch.set_facecolor(PANEL_BG)
+    ax.set_facecolor(PANEL_BG)
+    return fig, ax
+
+
+def style_axis(ax, title: str, xlabel: str, ylabel: str) -> None:
+    ax.set_title(title, loc="left", fontsize=12, fontweight="bold", color=INK, pad=14)
+    ax.set_xlabel(xlabel, color=MUTED, labelpad=8)
+    ax.set_ylabel(ylabel, color=MUTED, labelpad=8)
+    ax.tick_params(colors=MUTED)
+    ax.grid(axis="y", color=GRID, linewidth=0.8)
+    ax.grid(axis="x", visible=False)
+    sns.despine(ax=ax)
+
+
+def render_author_credit(st) -> None:
+    st.markdown(f'<div class="creator-bar">{AUTHOR_LINE}</div>', unsafe_allow_html=True)
+
+
+def render_header(st, df: pd.DataFrame, source_path: Path) -> None:
+    records = len(df)
+    label_one_rate = pct(int((df["depression_label"] == 1).sum()), records)
+    sleep_under_rate = pct(int((df["sleep_hours"] < 8).sum()), records)
+
+    st.markdown(
+        f"""
+        <section class="dashboard-hero">
+            <h1>{APP_TITLE}</h1>
+            <p>{APP_SUBTITLE}</p>
+            <div class="hero-meta">
+                <span class="hero-pill">{records:,} records</span>
+                <span class="hero-pill">{len(df.columns):,} columns</span>
+                <span class="hero-pill">Label 1 rate: {label_one_rate:.1f}%</span>
+                <span class="hero-pill">Sleep under 8 hrs: {sleep_under_rate:.1f}%</span>
+                <span class="hero-pill">Source: {source_path}</span>
+            </div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def build_sidebar_filters(st, df: pd.DataFrame) -> pd.DataFrame:
-    st.sidebar.header("Filters")
+    st.sidebar.header("Dashboard Controls")
+    st.sidebar.caption("Use filters to compare slices of the cleaned dataset.")
 
     min_age = int(df["age"].min())
     max_age = int(df["age"].max())
@@ -137,6 +377,8 @@ def build_sidebar_filters(st, df: pd.DataFrame) -> pd.DataFrame:
     st.sidebar.caption(
         "The depression label is a dataset indicator, not a clinical diagnosis."
     )
+    st.sidebar.divider()
+    st.sidebar.caption(AUTHOR_LINE)
 
     return apply_filters(df, age_range, category_filters, selected_labels)
 
@@ -145,17 +387,58 @@ def render_kpis(st, df: pd.DataFrame) -> None:
     records = len(df)
     label_one_count = int((df["depression_label"] == 1).sum())
     low_sleep_count = int((df["sleep_hours"] < 8).sum())
+    high_social_count = int((df["daily_social_media_hours"] >= 6).sum())
 
     metrics = [
-        ("Records", f"{records:,}"),
-        ("Label 1 rate", format_percent(pct(label_one_count, records))),
-        ("Avg sleep", f"{df['sleep_hours'].mean():.2f} hrs"),
-        ("Avg social media", f"{df['daily_social_media_hours'].mean():.2f} hrs"),
-        ("Sleep under 8 hrs", format_percent(pct(low_sleep_count, records))),
+        (
+            "Records",
+            f"{records:,}",
+            "Filtered sample size",
+            CARD_COLORS[0],
+        ),
+        (
+            "Label 1 rate",
+            format_percent(pct(label_one_count, records)),
+            f"{label_one_count:,} records in label 1",
+            ACCENT_RED,
+        ),
+        (
+            "Avg sleep",
+            f"{df['sleep_hours'].mean():.2f} hrs",
+            "Mean nightly sleep",
+            CARD_COLORS[1],
+        ),
+        (
+            "Avg social media",
+            f"{df['daily_social_media_hours'].mean():.2f} hrs",
+            "Mean daily platform use",
+            CARD_COLORS[2],
+        ),
+        (
+            "Sleep under 8 hrs",
+            format_percent(pct(low_sleep_count, records)),
+            f"{low_sleep_count:,} records below 8 hrs",
+            CARD_COLORS[4],
+        ),
+        (
+            "6+ hrs social media",
+            format_percent(pct(high_social_count, records)),
+            f"{high_social_count:,} records at or above 6 hrs",
+            CARD_COLORS[3],
+        ),
     ]
 
-    for column, (label, value) in zip(st.columns(len(metrics)), metrics):
-        column.metric(label, value)
+    for column, (label, value, note, color) in zip(st.columns(len(metrics)), metrics):
+        column.markdown(
+            f"""
+            <div class="stat-card" style="border-top-color: {color};">
+                <div class="stat-label">{label}</div>
+                <div class="stat-value">{value}</div>
+                <div class="stat-note">{note}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 def add_bar_labels(ax) -> None:
@@ -165,86 +448,117 @@ def add_bar_labels(ax) -> None:
 
 def plot_count_bar(df: pd.DataFrame, column: str, title: str, xlabel: str):
     counts = df[column].value_counts().sort_index()
-    fig, ax = plt.subplots(figsize=(7, 4))
-    sns.barplot(x=counts.index.astype(str), y=counts.values, ax=ax, color="#4C78A8")
-    ax.set_title(title)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel("Records")
+    labels = [f"Label {int(value)}" if column == "depression_label" else str(value) for value in counts.index]
+    fig, ax = make_figure((7, 4))
+    sns.barplot(
+        x=labels,
+        y=counts.values,
+        ax=ax,
+        hue=labels,
+        palette=chart_palette(len(labels)),
+        legend=False,
+    )
+    style_axis(ax, title, xlabel, "Records")
     ax.bar_label(ax.containers[0], fmt="%d", padding=3)
-    sns.despine()
     fig.tight_layout()
     return fig
 
 
 def plot_platform_bar(df: pd.DataFrame):
     counts = df["platform_usage"].value_counts()
-    fig, ax = plt.subplots(figsize=(7, 4))
+    labels = [label_title(value) for value in counts.index]
+    fig, ax = make_figure((7, 4))
     sns.barplot(
-        x=[label_title(value) for value in counts.index],
+        x=labels,
         y=counts.values,
         ax=ax,
-        palette=["#4C78A8", "#F58518", "#54A24B"],
-        hue=[label_title(value) for value in counts.index],
+        palette=chart_palette(len(labels)),
+        hue=labels,
         legend=False,
     )
-    ax.set_title("Platform Usage")
-    ax.set_xlabel("Platform")
-    ax.set_ylabel("Records")
+    style_axis(ax, "Platform Usage", "Platform", "Records")
     ax.bar_label(ax.containers[0], fmt="%d", padding=3)
-    sns.despine()
     fig.tight_layout()
     return fig
 
 
 def plot_sleep_histogram(df: pd.DataFrame):
-    fig, ax = plt.subplots(figsize=(8, 4))
-    sns.histplot(df["sleep_hours"], bins=10, kde=True, ax=ax, color="#72B7B2")
-    ax.axvline(df["sleep_hours"].mean(), color="#E45756", linewidth=2, label="Mean")
-    ax.set_title("Sleep Hours Distribution")
-    ax.set_xlabel("Sleep hours")
-    ax.set_ylabel("Records")
-    ax.legend()
-    sns.despine()
+    fig, ax = make_figure((8, 4))
+    sns.histplot(df["sleep_hours"], bins=10, kde=True, ax=ax, color="#0F766E")
+    ax.axvline(
+        df["sleep_hours"].mean(),
+        color=ACCENT_RED,
+        linewidth=2,
+        label="Mean",
+    )
+    ax.axvline(8, color="#F97316", linewidth=2, linestyle="--", label="8-hour reference")
+    style_axis(ax, "Sleep Hours Distribution", "Sleep hours", "Records")
+    ax.legend(frameon=False, labelcolor=MUTED)
     fig.tight_layout()
     return fig
 
 
 def plot_social_sleep_scatter(df: pd.DataFrame):
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = make_figure((8, 5))
     sns.scatterplot(
         data=df,
         x="daily_social_media_hours",
         y="sleep_hours",
         hue="depression_label",
-        palette={0: "#4C78A8", 1: "#E45756"},
-        alpha=0.65,
+        palette={0: "#2563EB", 1: ACCENT_RED},
+        alpha=0.72,
+        edgecolor="#FFFFFF",
+        linewidth=0.35,
         ax=ax,
     )
-    ax.set_title("Social Media Hours vs Sleep Hours")
-    ax.set_xlabel("Daily social media hours")
-    ax.set_ylabel("Sleep hours")
-    ax.legend(title="Depression label")
-    sns.despine()
+    style_axis(
+        ax,
+        "Social Media Hours vs Sleep Hours",
+        "Daily social media hours",
+        "Sleep hours",
+    )
+    ax.legend(title="Depression label", frameon=False, labelcolor=MUTED)
     fig.tight_layout()
     return fig
 
 
 def plot_stress_anxiety_heatmap(df: pd.DataFrame):
     table = pd.crosstab(df["anxiety_level"], df["stress_level"])
-    fig, ax = plt.subplots(figsize=(8, 5))
-    sns.heatmap(table, cmap="YlGnBu", annot=True, fmt="d", ax=ax)
-    ax.set_title("Stress vs Anxiety Count")
-    ax.set_xlabel("Stress level")
-    ax.set_ylabel("Anxiety level")
+    fig, ax = make_figure((8, 5))
+    sns.heatmap(
+        table,
+        cmap="mako_r",
+        annot=True,
+        fmt="d",
+        ax=ax,
+        linewidths=0.4,
+        linecolor="#FFFFFF",
+        cbar_kws={"label": "Records"},
+    )
+    ax.set_title("Stress vs Anxiety Count", loc="left", fontsize=12, fontweight="bold", color=INK, pad=14)
+    ax.set_xlabel("Stress level", color=MUTED, labelpad=8)
+    ax.set_ylabel("Anxiety level", color=MUTED, labelpad=8)
+    ax.tick_params(colors=MUTED)
     fig.tight_layout()
     return fig
 
 
 def plot_correlation_heatmap(df: pd.DataFrame):
     corr = df[NUMERIC_COLUMNS].corr(numeric_only=True)
-    fig, ax = plt.subplots(figsize=(9, 6))
-    sns.heatmap(corr, cmap="RdBu_r", center=0, annot=True, fmt=".2f", ax=ax)
-    ax.set_title("Numeric Correlation Matrix")
+    fig, ax = make_figure((9, 6))
+    sns.heatmap(
+        corr,
+        cmap="vlag",
+        center=0,
+        annot=True,
+        fmt=".2f",
+        ax=ax,
+        linewidths=0.35,
+        linecolor="#FFFFFF",
+        cbar_kws={"label": "Correlation"},
+    )
+    ax.set_title("Numeric Correlation Matrix", loc="left", fontsize=12, fontweight="bold", color=INK, pad=14)
+    ax.tick_params(colors=MUTED)
     fig.tight_layout()
     return fig
 
@@ -256,26 +570,25 @@ def plot_group_comparison(df: pd.DataFrame, value_column: str, title: str, ylabe
         .sort_values("depression_label")
     )
 
-    fig, ax = plt.subplots(figsize=(6, 4))
+    labels = [f"Label {int(value)}" for value in grouped["depression_label"]]
+    fig, ax = make_figure((6, 4))
     sns.barplot(
         data=grouped,
-        x="depression_label",
+        x=labels,
         y=value_column,
         ax=ax,
-        hue="depression_label",
-        palette={0: "#4C78A8", 1: "#E45756"},
+        hue=labels,
+        palette=chart_palette(len(labels)),
         legend=False,
     )
-    ax.set_title(title)
-    ax.set_xlabel("Depression label")
-    ax.set_ylabel(ylabel)
+    style_axis(ax, title, "Depression label", ylabel)
     add_bar_labels(ax)
-    sns.despine()
     fig.tight_layout()
     return fig
 
 
 def render_overview(st, df: pd.DataFrame) -> None:
+    st.markdown('<div class="section-title">Population Overview</div>', unsafe_allow_html=True)
     left, right = st.columns(2)
     left.pyplot(plot_count_bar(df, "depression_label", "Depression Label Count", "Label"))
     right.pyplot(plot_platform_bar(df))
@@ -283,6 +596,7 @@ def render_overview(st, df: pd.DataFrame) -> None:
 
 
 def render_lifestyle(st, df: pd.DataFrame) -> None:
+    st.markdown('<div class="section-title">Lifestyle Signals</div>', unsafe_allow_html=True)
     left, right = st.columns(2)
     left.pyplot(plot_social_sleep_scatter(df))
     right.pyplot(plot_stress_anxiety_heatmap(df))
@@ -290,6 +604,7 @@ def render_lifestyle(st, df: pd.DataFrame) -> None:
 
 
 def render_depression_comparison(st, df: pd.DataFrame) -> None:
+    st.markdown('<div class="section-title">Label Comparison</div>', unsafe_allow_html=True)
     comparison_columns = [
         "daily_social_media_hours",
         "sleep_hours",
@@ -341,6 +656,7 @@ def render_depression_comparison(st, df: pd.DataFrame) -> None:
 
 
 def render_data_table(st, df: pd.DataFrame) -> None:
+    st.markdown('<div class="section-title">Filtered Dataset</div>', unsafe_allow_html=True)
     st.dataframe(df, width="stretch", hide_index=True)
     st.download_button(
         "Download filtered CSV",
@@ -355,7 +671,15 @@ def render_context_notes(st, df: pd.DataFrame) -> None:
     label_zero = int((df["depression_label"] == 0).sum())
 
     if label_one == 0 or label_zero == 0:
-        st.info("The current filter contains only one depression label group.")
+        st.markdown(
+            """
+            <div class="risk-note">
+                The current filter contains only one depression label group, so
+                group-to-group comparison is unavailable for this slice.
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         return
 
     grouped = df.groupby("depression_label").mean(numeric_only=True)
@@ -365,12 +689,49 @@ def render_context_notes(st, df: pd.DataFrame) -> None:
     sleep_gap = grouped.loc[1, "sleep_hours"] - grouped.loc[0, "sleep_hours"]
     stress_gap = grouped.loc[1, "stress_level"] - grouped.loc[0, "stress_level"]
 
-    st.info(
-        "In the current filter, label 1 averages "
-        f"{social_gap:+.2f} more social media hours, "
-        f"{sleep_gap:+.2f} sleep hours, and "
-        f"{stress_gap:+.2f} stress score points compared with label 0. "
-        "These are descriptive differences only."
+    st.markdown(
+        '<div class="section-title">Current Slice Readout</div>',
+        unsafe_allow_html=True,
+    )
+
+    cards = [
+        (
+            "Social media gap",
+            f"{social_gap:+.2f} hrs",
+            "Label 1 average minus label 0 average",
+        ),
+        (
+            "Sleep gap",
+            f"{sleep_gap:+.2f} hrs",
+            "Label 1 average minus label 0 average",
+        ),
+        (
+            "Stress gap",
+            f"{stress_gap:+.2f} pts",
+            "Label 1 average minus label 0 average",
+        ),
+    ]
+
+    for column, (label, value, note) in zip(st.columns(3), cards):
+        column.markdown(
+            f"""
+            <div class="insight-card">
+                <div class="insight-label">{label}</div>
+                <div class="stat-value">{value}</div>
+                <div class="insight-note">{note}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        """
+        <div class="risk-note">
+            These are descriptive differences only. The depression label is a
+            dataset indicator, not a clinical diagnosis.
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
 
@@ -378,13 +739,9 @@ def main() -> None:
     import streamlit as st
 
     st.set_page_config(page_title=APP_TITLE, layout="wide")
-    sns.set_theme(style="whitegrid")
-
-    st.title(APP_TITLE)
-    st.caption(
-        "Interactive EDA dashboard for teen social media, sleep, academic, and "
-        "mental-health-related indicators."
-    )
+    sns.set_theme(style="whitegrid", rc={"axes.edgecolor": GRID, "axes.labelcolor": MUTED})
+    st.markdown(DASHBOARD_CSS, unsafe_allow_html=True)
+    render_author_credit(st)
 
     try:
         source_path = find_data_file()
@@ -393,8 +750,8 @@ def main() -> None:
         st.error(str(exc))
         st.stop()
 
+    render_header(st, df, source_path)
     filtered = build_sidebar_filters(st, df)
-    st.caption(f"Source: `{source_path}`")
 
     if filtered.empty:
         st.warning("No records match the selected filters.")
@@ -420,8 +777,8 @@ def main() -> None:
         render_data_table(st, filtered)
 
     st.caption(
-        "This dashboard is for exploratory analysis and learning. It should not "
-        "be used as medical advice."
+        f"{AUTHOR_LINE}. This dashboard is for exploratory analysis and learning. "
+        "It should not be used as medical advice."
     )
 
 

@@ -1,3 +1,5 @@
+<p align="right"><strong>Created by Hieu Nguyen</strong></p>
+
 # Teen Mental Health EDA
 
 Exploratory data analysis project focused on teen social media behavior, sleep habits, academic performance, stress, anxiety, addiction level, and depression label indicators.

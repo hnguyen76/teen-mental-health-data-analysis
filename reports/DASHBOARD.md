@@ -1,6 +1,10 @@
+<p align="right"><strong>Created by Hieu Nguyen</strong></p>
+
 # Teen Mental Health Dashboard
 
 This is a GitHub-friendly static dashboard generated from `Teen_Mental_Health_Cleaned.csv`. GitHub cannot run Streamlit apps inside the repository file view, so this page saves the dashboard charts as PNG images that can be viewed directly on GitHub.
+
+Exploratory view of teen social media habits, sleep, school performance, and mental-health-related indicators.
 
 ## KPI Summary
 
@@ -11,9 +15,18 @@ This is a GitHub-friendly static dashboard generated from `Teen_Mental_Health_Cl
 | Average daily social media hours | 4.54 |
 | Average sleep hours | 6.45 |
 | Sleep under 8 hours | 80.17% |
+| 6+ daily social media hours | 351 (29.25%) |
 | Depression label 1 records | 31 |
 | Depression label 1 rate | 2.58% |
 | Academic performance above 3.5 | 285 (23.75%) |
+
+## Current Dataset Readout
+
+| Comparison | Label 1 minus label 0 |
+|---|---:|
+| Daily social media hours | +2.24 |
+| Sleep hours | -1.73 |
+| Stress level | +3.12 |
 
 ## Label Comparison
 
@@ -31,6 +44,8 @@ This is a GitHub-friendly static dashboard generated from `Teen_Mental_Health_Cl
 ![Sleep distribution](figures/sleep_distribution.png)
 
 ## Lifestyle Signals
+
+![Social media hours vs sleep hours](figures/social_sleep_scatter.png)
 
 ![Stress vs anxiety heatmap](figures/stress_anxiety_heatmap.png)
 

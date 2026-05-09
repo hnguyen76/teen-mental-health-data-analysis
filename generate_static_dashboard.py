@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from dashboard import (
+    APP_SUBTITLE,
+    AUTHOR_LINE,
     find_data_file,
     load_clean_data,
     plot_correlation_heatmap,
@@ -13,6 +15,7 @@ from dashboard import (
     plot_group_comparison,
     plot_platform_bar,
     plot_sleep_histogram,
+    plot_social_sleep_scatter,
     plot_stress_anxiety_heatmap,
 )
 
@@ -39,6 +42,8 @@ def build_markdown(df: pd.DataFrame, source_path: Path, figures: dict[str, str])
     label_one_count = int(label_counts.get(1, 0))
     label_one_rate = label_one_count / records * 100
     low_sleep_rate = (df["sleep_hours"] < 8).mean() * 100
+    high_social_count = int((df["daily_social_media_hours"] >= 6).sum())
+    high_social_rate = high_social_count / records * 100
     high_academic_count = int((df["academic_performance"] > 3.5).sum())
     high_academic_rate = high_academic_count / records * 100
 
@@ -55,9 +60,30 @@ def build_markdown(df: pd.DataFrame, source_path: Path, figures: dict[str, str])
             f"{row['anxiety_level']:.2f} |"
         )
 
-    return f"""# Teen Mental Health Dashboard
+    social_gap = (
+        grouped.loc[1, "daily_social_media_hours"]
+        - grouped.loc[0, "daily_social_media_hours"]
+        if {0, 1}.issubset(grouped.index)
+        else 0
+    )
+    sleep_gap = (
+        grouped.loc[1, "sleep_hours"] - grouped.loc[0, "sleep_hours"]
+        if {0, 1}.issubset(grouped.index)
+        else 0
+    )
+    stress_gap = (
+        grouped.loc[1, "stress_level"] - grouped.loc[0, "stress_level"]
+        if {0, 1}.issubset(grouped.index)
+        else 0
+    )
+
+    return f"""<p align="right"><strong>{AUTHOR_LINE}</strong></p>
+
+# Teen Mental Health Dashboard
 
 This is a GitHub-friendly static dashboard generated from `{source_path}`. GitHub cannot run Streamlit apps inside the repository file view, so this page saves the dashboard charts as PNG images that can be viewed directly on GitHub.
+
+{APP_SUBTITLE}
 
 ## KPI Summary
 
@@ -68,9 +94,18 @@ This is a GitHub-friendly static dashboard generated from `{source_path}`. GitHu
 | Average daily social media hours | {df['daily_social_media_hours'].mean():.2f} |
 | Average sleep hours | {df['sleep_hours'].mean():.2f} |
 | Sleep under 8 hours | {format_percent(low_sleep_rate)} |
+| 6+ daily social media hours | {high_social_count:,} ({format_percent(high_social_rate)}) |
 | Depression label 1 records | {label_one_count:,} |
 | Depression label 1 rate | {format_percent(label_one_rate)} |
 | Academic performance above 3.5 | {high_academic_count:,} ({format_percent(high_academic_rate)}) |
+
+## Current Dataset Readout
+
+| Comparison | Label 1 minus label 0 |
+|---|---:|
+| Daily social media hours | {social_gap:+.2f} |
+| Sleep hours | {sleep_gap:+.2f} |
+| Stress level | {stress_gap:+.2f} |
 
 ## Label Comparison
 
@@ -87,6 +122,8 @@ This is a GitHub-friendly static dashboard generated from `{source_path}`. GitHu
 ![Sleep distribution]({figures['sleep_distribution']})
 
 ## Lifestyle Signals
+
+![Social media hours vs sleep hours]({figures['social_sleep']})
 
 ![Stress vs anxiety heatmap]({figures['stress_anxiety']})
 
@@ -127,6 +164,10 @@ def main() -> None:
         "sleep_distribution": save_figure(
             plot_sleep_histogram(df),
             "sleep_distribution.png",
+        ),
+        "social_sleep": save_figure(
+            plot_social_sleep_scatter(df),
+            "social_sleep_scatter.png",
         ),
         "stress_anxiety": save_figure(
             plot_stress_anxiety_heatmap(df),
