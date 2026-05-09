@@ -1,6 +1,7 @@
 <p align="right"><strong>Created by Hieu Nguyen</strong></p>
 
 # Teen Mental Health EDA
+https://hnguyen76.github.io/teen-mental-health-data-analysis/reports/DASHBOARD.html
 
 Exploratory data analysis project focused on teen social media behavior, sleep habits, academic performance, stress, anxiety, addiction level, and depression label indicators.
 
