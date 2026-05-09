@@ -1,5 +1,5 @@
 # Teen Mental Health Analysis
-
+View the static dashboard directly on GitHub: - [GitHub-viewable dashboard](reports/DASHBOARD.md)
 ## Project Overview
 
 This project explores teen mental health patterns using Python, Pandas, Matplotlib, and Seaborn.
